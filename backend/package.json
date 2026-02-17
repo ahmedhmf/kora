@@ -15,6 +15,7 @@
   "scripts": {
     "build": "medusa build",
     "seed": "medusa exec ./src/scripts/seed.ts",
+    "postbuild": "node scripts/fix-admin-build.js",
     "start": "medusa start",
     "dev": "medusa develop",
     "migrate": "medusa db:migrate",
