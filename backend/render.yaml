@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: kora-medusa-backend
+    runtime: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npx medusa db:migrate && npx medusa start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kora-medusa-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kora-medusa-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: MEDUSA_ADMIN_ONBOARDING_TYPE
+        value: "false"
+
+databases:
+  - name: kora-medusa-db
+    plan: starter
+
+interfaces:
+  - type: redis
+    name: kora-medusa-redis
+    plan: starter
