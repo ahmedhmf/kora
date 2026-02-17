@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #111111;
+  --color-accent: #EF0000;
+  --color-bg-white: #FFFFFF;
+  --color-bg-gray: #F5F5F5;
+  --color-text-main: #111111;
+  --color-text-secondary: #707072;
+
+  --font-sans: "Inter", "Outfit", sans-serif;
+  --font-display: "Inter", "Outfit", sans-serif;
+  /* Nike uses bold sans-serif for display */
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-white);
+    color: var(--color-text-main);
+    @apply antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+}
+
+@layer utilities {
+  .btn-pill {
+    @apply rounded-full px-6 py-3 font-bold transition-all inline-flex items-center justify-center;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-neutral-800;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary border border-neutral-200 hover:border-primary;
+  }
+
+  .product-bg {
+    @apply bg-bg-gray;
+  }
+}

@@ -1,0 +1,197 @@
+:host {
+    display: block;
+    background: #ffffff;
+    min-height: 100vh;
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Brand Design System */
+:host {
+    --brand-red: #E30613;
+    /* Estimated from logo */
+    --brand-black: #000000;
+    --brand-gray: #f8f9fa;
+    --transition-timing: cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+.brand-font {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+}
+
+.premium-title {
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+
+/* Background Texture */
+.split-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background:
+        linear-gradient(135deg, #ffffff 50%, #f1f1f1 50%);
+    opacity: 0.5;
+}
+
+/* Header */
+.brand-header {
+    background: white;
+    border-bottom: 1px solid #eee;
+    height: 80px;
+}
+
+.logo-img {
+    height: 45px;
+    width: auto;
+}
+
+/* Sliding Container */
+.slider-viewport {
+    position: relative;
+    width: 100%;
+    min-height: 800px;
+}
+
+.sliding-card-wrap {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 3rem;
+    position: relative;
+}
+
+/* Progress Bar */
+.progress-rail {
+    height: 4px;
+    background: #eee;
+    width: 100%;
+    border-radius: 2px;
+}
+
+.progress-track {
+    height: 100%;
+    background: var(--brand-red);
+    transition: width 0.6s var(--transition-timing);
+    border-radius: 2px;
+}
+
+/* Custom Buttons */
+.brand-btn {
+    padding: 1rem 2.5rem;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.brand-btn-primary {
+    background: var(--brand-red);
+    color: white;
+    border: none;
+    box-shadow: 0 10px 20px rgba(227, 6, 19, 0.2);
+}
+
+.brand-btn-primary:hover {
+    background: #c20511;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(227, 6, 19, 0.3);
+}
+
+.brand-btn-secondary {
+    background: transparent;
+    color: var(--brand-black);
+    border: 2px solid #eee;
+}
+
+.brand-btn-secondary:hover {
+    border-color: var(--brand-black);
+    background: #fafafa;
+}
+
+/* Inputs & Interactivity */
+.rating-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.rating-circle {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    border: 2px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rating-circle:hover {
+    border-color: var(--brand-red);
+    color: var(--brand-red);
+    background: #fffcfc;
+}
+
+.rating-circle.active {
+    background: var(--brand-red);
+    color: white;
+    border-color: var(--brand-red);
+    box-shadow: 0 10px 20px rgba(227, 6, 19, 0.2);
+}
+
+.selection-card {
+    padding: 1.5rem;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.selection-card:hover {
+    border-color: #ddd;
+    background: #fafafa;
+}
+
+.selection-card.active {
+    border-color: var(--brand-red);
+    background: #fffcfc;
+    color: var(--brand-red);
+}
+
+/* RTL Adjustments */
+[dir="rtl"] {
+    font-family: 'Oswald', 'Inter', sans-serif;
+}
+
+/* Success Message Improvements */
+.success-bg {
+    background: linear-gradient(to bottom, #fff, #f8f9fa);
+}
