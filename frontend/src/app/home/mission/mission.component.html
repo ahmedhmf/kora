@@ -1,0 +1,28 @@
+<section class="py-40 bg-surface">
+    <div class="px-8 md:px-20 max-w-[1440px] mx-auto text-center">
+  
+      <span class="text-primary-container font-headline text-xs tracking-[0.5em] uppercase font-bold mb-12 block">
+        Philosophy
+      </span>
+  
+      <h2 class="font-headline text-[2.5rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[1] max-w-5xl mx-auto mb-16">
+        WE DON'T MAKE GEAR. WE ENGINEER
+        <span class="outline-text">COMPETITIVE ADVANTAGE</span>.
+      </h2>
+  
+      <p class="font-body text-xl text-on-surface-variant max-w-2xl mx-auto mb-16 leading-relaxed">
+        KORA was born from a singular obsession: the rejection of mediocrity. Every stitch, every compound,
+        and every curve is designed to eliminate friction between the athlete and their peak performance.
+      </p>
+  
+      <div class="flex justify-center gap-20 flex-wrap">
+        @for (stat of stats; track $index) {
+            <div class="text-left">
+              <div class="text-4xl font-headline font-black text-primary-container mb-2">{{ stat.value }}</div>
+              <div class="text-xs font-headline uppercase tracking-widest text-on-surface-variant">{{ stat.label }}</div>
+            </div>  
+        }
+    </div>
+
+    </div>
+  </section>

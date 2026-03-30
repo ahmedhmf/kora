@@ -1,0 +1,314 @@
+@if (loading) {
+  <div
+    class="min-h-screen bg-surface pt-24 px-8 md:px-20 max-w-[1440px] mx-auto"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 py-16 animate-pulse">
+      <div class="aspect-square bg-surface-container rounded-md"></div>
+      <div class="flex flex-col gap-6 pt-8">
+        <div class="h-4 bg-surface-container rounded w-1/3"></div>
+        <div class="h-16 bg-surface-container rounded w-3/4"></div>
+        <div class="h-10 bg-surface-container rounded w-1/4"></div>
+        <div class="h-24 bg-surface-container rounded"></div>
+        <div class="h-14 bg-surface-container rounded mt-4"></div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (error && !loading) {
+  <div class="min-h-screen bg-surface flex items-center justify-center">
+    <div class="text-center">
+      <span class="material-symbols-outlined text-error text-6xl mb-4 block"
+        >error_outline</span
+      >
+      <p class="font-headline uppercase tracking-widest text-error text-sm">
+        {{ error }}
+      </p>
+    </div>
+  </div>
+}
+
+@if (!loading && !error && product) {
+  <div class="bg-surface min-h-screen">
+    <section class="pt-24 pb-20 px-8 md:px-20 max-w-[1440px] mx-auto">
+      
+      <!-- Back Navigation -->
+      <button 
+        (click)="goBack()" 
+        class="flex items-center gap-3 text-on-surface-variant hover:text-primary-container transition-colors duration-200 mb-8 font-headline text-[0.65rem] tracking-[0.3em] uppercase group">
+        <span class="material-symbols-outlined text-lg transition-transform duration-200 group-hover:-translate-x-1">arrow_back</span>
+        BACK
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div class="flex flex-col gap-4">
+          <div
+            class="relative bg-surface-container-low rounded-md overflow-hidden aspect-square"
+          >
+            <img
+              [src]="currentImage"
+              [alt]="product.title"
+              class="w-full h-full object-cover transition-opacity duration-300"
+              [class.opacity-50]="isProductOutOfStock()"
+            />
+            <!-- Out of Stock Overlay -->
+            @if (isProductOutOfStock()) {
+              <div class="absolute inset-0 bg-[#0c0c0c]/60 backdrop-blur-[2px] z-[5] flex items-center justify-center p-8">
+                <div class="border border-white/20 px-8 py-4 bg-[#0c0c0c]/80 text-white font-headline font-black text-xl tracking-[0.4em] uppercase shadow-2xl">
+                  Out of Stock
+                </div>
+              </div>
+            }
+            @if (product.collection) {
+              <div
+                class="absolute bottom-0 right-0 bg-surface-container-high/90 backdrop-blur-sm px-6 py-4 border-l border-t border-outline-variant"
+              >
+                <p
+                  class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant mb-1"
+                >
+                  Collection
+                </p>
+                <p
+                  class="font-headline font-black text-sm uppercase tracking-widest text-on-surface"
+                >
+                  {{ product.collection.title }}
+                </p>
+              </div>
+            }
+          </div>
+
+          @if (allImages.length > 1) {
+            <div class="flex gap-3">
+              @for (img of allImages; track img; let i = $index) {
+                <button
+                  (click)="selectImage(i)"
+                  class="w-20 h-20 rounded-sm overflow-hidden border-2 transition-all duration-200 flex-shrink-0"
+                  [class.border-primary-container]="selectedImageIndex === i"
+                  [class.border-transparent]="selectedImageIndex !== i"
+                >
+                  <img
+                    [src]="img"
+                    [alt]="'View ' + (i + 1)"
+                    class="w-full h-full object-cover"
+                  />
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-col pt-0 md:pt-8">
+          <span
+            class="font-headline text-[0.65rem] tracking-[0.35em] uppercase text-primary-container font-bold mb-5 block"
+          >
+            {{ product.collection?.title ?? "" }}
+          </span>
+
+          <h1
+            class="font-headline text-[3rem] md:text-[3.5rem] font-black uppercase leading-[0.9] tracking-tighter mb-8"
+          >
+            {{ product.title }}
+          </h1>
+
+          <!-- Price -->
+          <div class="mb-8">
+            <span
+              class="font-headline text-4xl font-black text-primary-container"
+            >
+              {{ getPrice(selectedVariant) }}
+            </span>
+          </div>
+
+          <!-- Description -->
+          <p
+            class="font-body text-on-surface-variant leading-relaxed mb-8 max-w-md"
+          >
+            {{ product.description ?? "" }}
+          </p>
+
+          <!-- Feature tags from Medusa tags -->
+          @if (product.tags && product.tags!.length > 0) {
+            <ul class="flex flex-col gap-3 mb-10">
+              @for (tag of product.tags; track $index) {
+                <li class="flex items-center gap-3">
+                  <span
+                    class="w-2 h-2 rounded-full bg-primary-container flex-shrink-0"
+                  ></span>
+                  <span
+                    class="font-headline text-xs tracking-[0.2em] uppercase text-on-surface"
+                    >{{ tag.value }}</span
+                  >
+                </li>
+              }
+            </ul>
+          }
+          <!-- Fallback feature list if no tags -->
+          @if (!product.tags || product.tags!.length === 0) {
+            <ul class="flex flex-col gap-3 mb-10">
+              @for (
+                feat of [
+                  "Thermal Bonded",
+                  "Micro-Texture Surface",
+                  "FIFA Quality Pro",
+                ];
+                track $index
+              ) {
+                <li class="flex items-center gap-3">
+                  <span
+                    class="w-2 h-2 rounded-full bg-primary-container flex-shrink-0"
+                  ></span>
+                  <span
+                    class="font-headline text-xs tracking-[0.2em] uppercase text-on-surface"
+                    >{{ feat }}</span
+                  >
+                </li>
+              }
+            </ul>
+          }
+
+          <!-- Variant selector -->
+          @if (product.variants && product.variants.length > 1) {
+            <div class="mb-8">
+              <p
+                class="font-headline text-xs tracking-[0.25em] uppercase text-on-surface-variant mb-3"
+              >
+                Select Option
+              </p>
+              <div class="flex flex-wrap gap-3">
+                @for (variant of product.variants; track $index) {
+                  <button
+                    (click)="selectVariant(variant)"
+                    [disabled]="isVariantOutOfStock(variant)"
+                    class="px-5 py-3 font-headline text-xs tracking-widest uppercase rounded-sm border transition-all duration-150 relative overflow-hidden"
+                    [class.opacity-30]="isVariantOutOfStock(variant)"
+                    [class.cursor-not-allowed]="isVariantOutOfStock(variant)"
+                    [class.bg-primary-container]="
+                      selectedVariant?.id === variant.id
+                    "
+                    [class.text-on-primary-container]="
+                      selectedVariant?.id === variant.id
+                    "
+                    [class.border-primary-container]="
+                      selectedVariant?.id === variant.id
+                    "
+                    [class.bg-transparent]="selectedVariant?.id !== variant.id"
+                    [class.text-on-surface-variant]="
+                      selectedVariant?.id !== variant.id
+                    "
+                    [class.border-outline-variant]="
+                      selectedVariant?.id !== variant.id
+                    "
+                    [class.hover:border-outline]="
+                      selectedVariant?.id !== variant.id
+                    "
+                  >
+                    {{ variant.title }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Add to Bag / Notify Me -->
+          @if (!isVariantOutOfStock(selectedVariant)) {
+            <button
+              (click)="addToBag()"
+              class="w-full py-5 font-headline font-bold uppercase tracking-[0.2em] text-sm rounded-sm transition-all duration-200 active:scale-[0.98]"
+              [class.kinetic-gradient]="!addedToBag"
+              [class.text-on-primary-container]="!addedToBag"
+              [class.bg-surface-container-highest]="addedToBag"
+              [class.text-on-surface]="addedToBag"
+            >
+              @if (!addedToBag) {
+                <span class="flex items-center justify-center gap-3">
+                  <span class="material-symbols-outlined text-lg">shopping_bag</span>
+                  ADD TO BAG
+                </span>
+              }
+              @if (addedToBag) {
+                <span class="flex items-center justify-center gap-3">
+                  <span class="material-symbols-outlined text-lg">check_circle</span>
+                  ADDED TO BAG
+                </span>
+              }
+            </button>
+          } @else {
+            <div class="bg-surface-container-low border border-outline-variant rounded-sm p-6">
+              <p class="font-headline text-[0.65rem] tracking-[0.25em] uppercase text-primary-container font-bold mb-4">
+                Notify me when available
+              </p>
+              <div class="flex gap-2">
+                <input 
+                  #notifyEmail
+                  type="email" 
+                  placeholder="ENTER YOUR EMAIL" 
+                  class="flex-1 bg-surface border border-outline-variant px-4 py-3 font-headline text-[0.65rem] tracking-widest uppercase focus:outline-none focus:border-primary-container transition-colors"
+                />
+                <button 
+                  (click)="subscribeToBackInStock(notifyEmail.value); notifyEmail.value = ''"
+                  class="bg-on-surface text-surface px-6 py-3 font-headline font-bold text-[0.65rem] tracking-widest uppercase hover:bg-primary-container hover:text-on-primary-container transition-all">
+                  SUBMIT
+                </button>
+              </div>
+              <p class="font-headline text-[0.55rem] tracking-widest uppercase text-on-surface-variant mt-4">
+                WE'LL ALERT YOU AS SOON AS STOCK IS REPLENISHED.
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="border-t border-outline-variant mx-8 md:mx-20"></div>
+
+    <!-- ── Technical Specs Section ── -->
+    <section class="py-24 px-8 md:px-20 max-w-[1440px] mx-auto">
+      <!-- Section header -->
+      <div class="flex justify-between items-end mb-16">
+        <h2
+          class="font-headline text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.9]"
+        >
+          TECHNICAL<br />SPECIFICATIONS
+        </h2>
+        <span
+          class="font-headline text-xs tracking-[0.25em] uppercase text-on-surface-variant hidden md:block"
+        >
+          KORA PERFORMANCE LABS / 2024
+        </span>
+      </div>
+
+      <!-- Spec cards -->
+      <div
+        class="bg-surface-container-low rounded-md p-10 grid grid-cols-1 md:grid-cols-3 gap-10"
+      >
+        @for (spec of specs; track $index; let last = $last) {
+          <div
+            class="flex flex-col"
+            [class.md:border-r]="!last"
+            [class.md:border-outline-variant]="!last"
+            [class.md:pr-10]="!last"
+          >
+            <!-- Icon -->
+            <div class="mb-6">
+              <span
+                class="material-symbols-outlined text-primary-container text-3xl"
+                >{{ spec.icon }}</span
+              >
+            </div>
+            <h3
+              class="font-headline font-black text-sm uppercase tracking-widest mb-4 leading-snug"
+            >
+              {{ spec.title }}
+            </h3>
+            <p
+              class="font-body text-on-surface-variant text-sm leading-relaxed"
+            >
+              {{ spec.description }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+}

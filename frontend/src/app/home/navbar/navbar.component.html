@@ -1,0 +1,46 @@
+<nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl">
+    <div class="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+  
+      <!-- Logo -->
+      <div class="text-2xl font-black text-on-surface tracking-tighter font-headline w-10">
+        <a [routerLink]="['/home']"><img src="../../../assets/Logo.webp" alt=""></a>
+      </div>
+  
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex gap-12 items-center">
+        <a href="#"
+        routerLink="/shop" routerLinkActive="text-primary-container border-b-2 border-primary-container"
+           class="font-headline uppercase tracking-tight text-primary-container font-bold border-b-2 border-primary-container pb-1 transition-opacity duration-200">
+          Shop
+        </a>
+        <a href="#"
+           class="font-headline uppercase tracking-tight text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+          Apparel
+        </a>
+        <a href="#"
+           class="font-headline uppercase tracking-tight text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+          Performance
+        </a>
+        <a href="#"
+           class="font-headline uppercase tracking-tight text-on-surface-variant hover:text-on-surface transition-colors duration-200">
+          Labs
+        </a>
+      </div>
+  
+      <!-- Icons -->
+      <div class="flex items-center gap-6">
+        <button (click)="cartService.open()" class="relative hover:opacity-80 transition-opacity duration-200 active:scale-95 group">
+          <span class="material-symbols-outlined text-on-surface">shopping_cart</span>
+          @if (cartService.totalItems > 0) {
+            <span class="absolute -top-2 -right-2 bg-primary-container text-on-primary-container text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-surface shadow-sm">
+              {{ cartService.totalItems }}
+            </span>
+          }
+        </button>
+        <button class="hover:opacity-80 transition-opacity duration-200 active:scale-95">
+          <span class="material-symbols-outlined text-on-surface">person</span>
+        </button>
+      </div>
+  
+    </div>
+  </nav>

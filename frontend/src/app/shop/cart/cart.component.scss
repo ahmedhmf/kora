@@ -1,0 +1,27 @@
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+}
+
+:host {
+  display: block;
+}
+
+// Kinetic gradient from our brand system
+.kinetic-gradient {
+  background: linear-gradient(135deg, #d22b2b 0%, #a82222 100%);
+  color: white;
+  box-shadow: 0 10px 30px rgba(210, 43, 43, 0.2);
+  
+  &:hover {
+    filter: brightness(1.1);
+  }
+}

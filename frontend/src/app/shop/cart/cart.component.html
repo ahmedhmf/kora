@@ -1,0 +1,115 @@
+<!-- Backdrop -->
+<div 
+  class="fixed inset-0 z-[100] bg-surface/80 backdrop-blur-md transition-opacity duration-500 pointer-events-none opacity-0"
+  [class.opacity-100]="isOpen$ | async"
+  [class.pointer-events-auto]="isOpen$ | async"
+  (click)="close()"
+></div>
+
+<!-- Sidebar Drawer -->
+<aside 
+  class="fixed top-0 right-0 h-full w-full max-w-md z-[101] bg-[#0c0c0c] text-on-surface shadow-[-20px_0_50px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] flex flex-col pt-12 pb-10"
+  [class.translate-x-0]="isOpen$ | async"
+  [class.translate-x-full]="!(isOpen$ | async)"
+>
+  
+  <!-- Header -->
+  <div class="px-10 flex justify-between items-start mb-12">
+    <div>
+      <h2 class="font-headline text-[2.5rem] font-black uppercase leading-none tracking-tighter mb-2">CART</h2>
+      <p class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant font-bold">PREMIUM PERFORMANCE GEAR</p>
+    </div>
+    <button (click)="close()" class="group p-2 -mr-2">
+      <span class="material-symbols-outlined text-2xl transition-transform duration-300 group-hover:rotate-90">close</span>
+    </button>
+  </div>
+
+  <!-- Items List -->
+  <div class="flex-1 overflow-y-auto px-10 custom-scrollbar">
+    
+    @if ((cart$ | async)?.items?.length === 0) {
+      <div class="h-full flex flex-col items-center justify-center opacity-40">
+        <span class="material-symbols-outlined text-6xl mb-4">shopping_bag_off</span>
+        <p class="font-headline uppercase tracking-[0.2em] text-sm">Your bag is empty</p>
+      </div>
+    }
+
+    <div class="flex flex-col gap-10">
+      @for (item of (cart$ | async)?.items; track item.id) {
+        <div class="flex gap-6 group">
+          <!-- Thumbnail -->
+          <div class="w-24 h-24 flex-shrink-0 bg-surface-container-low rounded-sm overflow-hidden border border-outline-variant">
+            <img [src]="item.thumbnail" [alt]="item.title" class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500">
+          </div>
+          
+          <!-- Info -->
+          <div class="flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-headline font-black text-xs uppercase tracking-widest leading-none mb-2">{{item.title}}</h3>
+              <p class="font-headline text-[0.6rem] tracking-widest uppercase text-on-surface-variant">{{item.subtitle}}</p>
+            </div>
+            
+            <div class="flex items-center justify-between mt-auto">
+              <!-- Quantity Controls -->
+              <div class="flex items-center border border-outline-variant h-8 px-2 bg-surface-container-lowest/50">
+                <button (click)="updateQuantity(item, -1)" class="w-6 h-full flex items-center justify-center hover:text-primary-container transition-colors">
+                  <span class="material-symbols-outlined text-sm">remove</span>
+                </button>
+                <span class="w-8 text-center font-headline text-[0.7rem] font-bold">{{item.quantity}}</span>
+                <button (click)="updateQuantity(item, 1)" class="w-6 h-full flex items-center justify-center hover:text-primary-container transition-colors">
+                  <span class="material-symbols-outlined text-sm">add</span>
+                </button>
+              </div>
+              
+              <!-- Price -->
+              <span class="font-headline text-xs font-black tracking-widest">{{formatPrice(item.total)}}</span>
+            </div>
+          </div>
+
+          <!-- Remove Button (Absolute overlay on hover?) or simple X -->
+          <button (click)="removeItem(item.id)" class="opacity-0 group-hover:opacity-100 transition-opacity p-1">
+             <span class="material-symbols-outlined text-xs text-on-surface-variant hover:text-error transition-colors">delete</span>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Recommended Add-on -->
+    @if ((cart$ | async)?.items?.length! > 0) {
+        <div class="mt-16 bg-surface-container-low/30 border-l-2 border-primary-container p-6 relative group overflow-hidden">
+            <p class="font-headline text-[0.55rem] tracking-[0.2em] uppercase text-primary-container font-black mb-3">RECOMMENDED ADD-ON</p>
+            <div class="flex justify-between items-center">
+                <h4 class="font-headline font-black text-xs uppercase tracking-widest">COMPRESSION SLEEVES</h4>
+                <button class="font-headline text-[0.6rem] tracking-[0.1em] uppercase border-b border-primary-container pb-0.5 hover:text-primary-container transition-colors">ADD + $45</button>
+            </div>
+            <!-- Subtitle background effect -->
+            <div class="absolute -right-4 -bottom-4 text-[4rem] font-black opacity-[0.03] uppercase tracking-tighter select-none rotate-[-5deg]">CORE</div>
+        </div>
+    }
+  </div>
+
+  <!-- Footer -->
+  <div class="px-10 mt-10 pt-10 border-t border-outline-variant/30">
+    <div class="space-y-4 mb-10">
+      <div class="flex justify-between items-center">
+        <span class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant">SUBTOTAL</span>
+        <span class="font-headline text-lg font-black tracking-tighter">{{formatPrice((cart$ | async)?.subtotal)}}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant">SHIPPING</span>
+        <span class="font-headline text-[0.65rem] tracking-[0.1em] uppercase text-on-surface">CALCULATED AT CHECKOUT</span>
+      </div>
+    </div>
+
+    <button class="kinetic-gradient w-full py-6 flex items-center justify-center gap-4 group transition-all active:scale-[0.98]">
+      <span class="font-headline font-black uppercase tracking-[0.25em] text-sm">CHECKOUT NOW</span>
+      <span class="material-symbols-outlined text-lg transition-transform duration-300 group-hover:translate-x-2">trending_flat</span>
+    </button>
+
+    <div class="flex justify-center gap-10 mt-8 opacity-40">
+       <span class="font-headline text-[0.5rem] tracking-[0.25em] uppercase">SECURE ENCRYPTION</span>
+       <span class="font-headline text-[0.5rem] tracking-[0.25em] uppercase">GLOBAL LOGISTICS</span>
+    </div>
+  </div>
+
+</aside>

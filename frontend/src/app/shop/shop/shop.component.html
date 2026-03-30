@@ -1,0 +1,289 @@
+<div class="bg-surface min-h-screen pt-20">
+
+  <!-- ── Page Header ───────────────────────────────────── -->
+  <header class="px-8 md:px-20 pt-12 pb-10 max-w-[1440px] mx-auto">
+    <h1 class="font-headline text-[3rem] md:text-[5.5rem] font-black uppercase tracking-tighter leading-[0.85] mb-6">
+      ENGINEERED <span class="text-primary-container">PERFORMANCE</span>
+    </h1>
+    <p class="font-headline text-xs md:text-sm tracking-[0.25em] uppercase text-on-surface-variant max-w-xl">
+      ELITE GEAR FOR THE MODERN ATHLETE. PRECISION-MILLED<br class="hidden md:block" />
+      TECHNOLOGY MEETS HIGH-VELOCITY DESIGN.
+    </p>
+  </header>
+
+  <!-- ── Main Layout: Sidebar + Grid ──────────────────── -->
+  <div class="px-8 md:px-20 max-w-[1440px] mx-auto pb-32 flex gap-12 items-start">
+
+    <!-- ── Sidebar Filters ────────────────────────────── -->
+    <aside class="hidden md:flex flex-col gap-10 w-[200px] flex-shrink-0 sticky top-24">
+
+      <!-- Category — single select, built from product data -->
+      <div>
+        <p class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant mb-5">Category</p>
+
+        <!-- Skeleton while loading -->
+        @if (loading) {
+          <div class="flex flex-col gap-4 animate-pulse">
+            @for (s of [1,2,3,4]; track s) {
+              <div class="flex items-center gap-3">
+                <div class="w-4 h-4 rounded-[2px] bg-surface-container"></div>
+                <div class="h-3 bg-surface-container rounded w-20"></div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (!loading) {
+          <div class="flex flex-col gap-4">
+            @for (cat of categories; track cat) {
+              <label
+                class="flex items-center gap-3 cursor-pointer"
+                (click)="selectCategory(cat)">
+                <span
+                  class="w-4 h-4 border flex items-center justify-center flex-shrink-0 transition-colors duration-150 rounded-[2px]"
+                  [class.border-primary-container]="isCategorySelected(cat)"
+                  [class.bg-primary-container]="isCategorySelected(cat)"
+                  [class.border-outline-variant]="!isCategorySelected(cat)">
+                  @if (isCategorySelected(cat)) {
+                    <span
+                      class="material-symbols-outlined text-on-primary-container"
+                      style="font-size:11px;font-variation-settings:'FILL' 1">
+                      check
+                    </span>
+                  }
+                </span>
+                <span
+                  class="font-headline text-xs tracking-widest uppercase transition-colors duration-150"
+                  [class.text-on-surface]="isCategorySelected(cat)"
+                  [class.text-on-surface-variant]="!isCategorySelected(cat)">
+                  {{ cat }}
+                </span>
+              </label>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Size — built from variant options, hidden if no sizes exist -->
+      @if (!loading && availableSizes.length > 0) {
+        <div>
+          <p class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant mb-5">Size</p>
+          <div class="flex flex-wrap gap-2">
+            @for (size of availableSizes; track size) {
+              <button
+                (click)="toggleSize(size)"
+                class="px-3 h-10 min-w-[40px] font-headline text-xs font-bold tracking-widest uppercase rounded-sm border transition-all duration-150 active:scale-95"
+                [class.bg-primary-container]="isSizeSelected(size)"
+                [class.text-on-primary-container]="isSizeSelected(size)"
+                [class.border-primary-container]="isSizeSelected(size)"
+                [class.bg-transparent]="!isSizeSelected(size)"
+                [class.text-on-surface-variant]="!isSizeSelected(size)"
+                [class.border-outline-variant]="!isSizeSelected(size)">
+                {{ size }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Price Range — dual slider -->
+      @if (!loading) {
+        <div>
+          <p class="font-headline text-[0.6rem] tracking-[0.3em] uppercase text-on-surface-variant mb-5">Price Range</p>
+          
+          <div class="range-slider-container relative h-6 mb-2">
+            <!-- The visible track background -->
+            <div class="range-track absolute top-1/2 -translate-y-1/2 w-full h-[2px] bg-surface-container-high rounded-full"></div>
+            <!-- The active range highlight -->
+            <div 
+              class="range-highlight absolute top-1/2 -translate-y-1/2 h-[2px] bg-primary-container rounded-full"
+              [style.left.%]="(minPriceFilter / absoluteMaxPrice) * 100"
+              [style.right.%]="100 - (maxPriceFilter / absoluteMaxPrice) * 100"
+            ></div>
+            
+            <input
+              type="range"
+              [min]="0"
+              [max]="absoluteMaxPrice"
+              [value]="minPriceFilter"
+              (input)="onMinPriceChange($event)"
+              class="range-input absolute inset-0 w-full bg-transparent appearance-none pointer-events-none z-10"
+              style="accent-color: #d22b2b;"
+            />
+            <input
+              type="range"
+              [min]="0"
+              [max]="absoluteMaxPrice"
+              [value]="maxPriceFilter"
+              (input)="onMaxPriceChange($event)"
+              class="range-input absolute inset-0 w-full bg-transparent appearance-none pointer-events-none z-20"
+              style="accent-color: #d22b2b;"
+            />
+          </div>
+
+          <div class="flex justify-between mt-3">
+            <span class="font-headline text-xs tracking-widest text-on-surface-variant">${{ minPriceFilter }}</span>
+            <span class="font-headline text-xs tracking-widest text-primary-container">${{ maxPriceFilter }}</span>
+          </div>
+
+          <!-- Active filter indicator -->
+          @if (minPriceFilter > 0 || maxPriceFilter < absoluteMaxPrice) {
+            <p class="font-headline text-[0.6rem] tracking-widest uppercase text-on-surface-variant mt-2">
+              Viewing <span class="text-primary-container">{{ priceRangeLabel }}</span>
+            </p>
+          }
+        </div>
+      }
+
+      </aside>
+
+      <!-- ── Product Grid ───────────────────────────────── -->
+      <div class="flex-1 min-w-0">
+
+        <!-- Loading skeletons -->
+        @if (loading) {
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+            @for (s of skeletons; track s) {
+              <div class="animate-pulse">
+                <div class="aspect-[3/4] bg-surface-container rounded-md mb-4"></div>
+                <div class="h-4 bg-surface-container rounded w-3/4 mb-2"></div>
+                <div class="h-3 bg-surface-container rounded w-1/2 mb-2"></div>
+                <div class="h-4 bg-surface-container rounded w-1/3"></div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Error -->
+        @if (error && !loading) {
+          <div class="flex items-center gap-4 text-error py-20">
+            <span class="material-symbols-outlined">error_outline</span>
+            <p class="font-headline uppercase tracking-widest text-sm">{{ error }}</p>
+          </div>
+        }
+
+        <!-- Result count + active filters summary -->
+        @if (!loading && !error) {
+          <div class="flex items-center gap-4 mb-8 flex-wrap">
+            <span class="font-headline text-[0.6rem] tracking-[0.25em] uppercase text-on-surface-variant">
+              {{ _filteredCache.length }} {{ _filteredCache.length === 1 ? 'product' : 'products' }}
+              @if (selectedCategory !== 'ALL GEAR') {
+                · {{ selectedCategory }}
+              }
+              @if (minPriceFilter > 0 || maxPriceFilter < absoluteMaxPrice) {
+                · {{ priceRangeLabel }}
+              }
+            </span>
+            @if (selectedCategory !== 'ALL GEAR' || selectedSizes.size > 0 || minPriceFilter > 0 || maxPriceFilter < absoluteMaxPrice) {
+              <button
+                (click)="clearFilters()"
+                class="font-headline text-[0.6rem] tracking-[0.2em] uppercase text-primary-container hover:opacity-70 transition-opacity">
+                CLEAR ALL
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Empty state -->
+        @if (!loading && !error && displayedProducts.length === 0) {
+          <div class="py-24 text-center">
+            <span class="material-symbols-outlined text-on-surface-variant text-5xl mb-4 block">search_off</span>
+            <p class="font-headline uppercase tracking-widest text-on-surface-variant text-sm mb-6">No products match your filters.</p>
+            <button (click)="clearFilters()"
+              class="font-headline text-xs tracking-[0.2em] uppercase text-primary-container border border-primary-container px-6 py-3 rounded-sm hover:bg-primary-container hover:text-on-primary-container transition-all">
+              CLEAR FILTERS
+            </button>
+          </div>
+        }
+
+        <!-- Grid -->
+        @if (!loading && !error && displayedProducts.length > 0) {
+          <div
+            class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+            @for (product of displayedProducts; track product) {
+              <a
+                [routerLink]="['/products', product.handle]"
+                class="group cursor-pointer block">
+                <!-- Image -->
+                <div class="relative aspect-[3/4] bg-surface-container-low rounded-md overflow-hidden mb-4">
+                  <img
+                    [src]="getImage(product)"
+                    [alt]="product.title"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    [class.opacity-50]="isSoldOut(product)"
+                    />
+                    @if (getBadge(product); as badge) {
+                      @if (badge.type === 'elite') {
+                        <span
+                          class="absolute top-3 left-3 bg-primary-container text-on-primary-container font-headline text-[0.55rem] tracking-[0.2em] uppercase px-2 py-1 rounded-[2px]">
+                          {{ badge.label }}
+                        </span>
+                      }
+                      @if (badge.type === 'new') {
+                        <span
+                          class="absolute top-3 left-3 bg-surface-container-high/90 backdrop-blur-sm text-on-surface font-headline text-[0.55rem] tracking-[0.2em] uppercase px-2 py-1 rounded-[2px]">
+                          {{ badge.label }}
+                        </span>
+                      }
+                      @if (badge.type === 'sold') {
+                        <span
+                          class="absolute bottom-3 right-3 bg-surface-container-high/90 backdrop-blur-sm text-on-surface font-headline text-[0.55rem] tracking-[0.2em] uppercase px-2 py-1 rounded-[2px]">
+                          {{ badge.label }}
+                        </span>
+                      }
+                    }
+                    <div class="absolute inset-0 bg-surface/0 group-hover:bg-surface/10 transition-colors duration-300 pointer-events-none"></div>
+
+                    <!-- Out of Stock Overlay -->
+                    @if (isSoldOut(product)) {
+                      <div class="absolute inset-0 bg-[#0c0c0c]/60 backdrop-blur-[2px] z-[5] flex items-center justify-center p-4">
+                        <div class="border border-white/20 px-4 py-2 bg-[#0c0c0c]/80 text-white font-headline font-bold text-[0.6rem] tracking-[0.3em] uppercase">
+                          Out of Stock
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <!-- Info -->
+                  <h3 class="font-headline font-black text-sm uppercase tracking-tight leading-snug mb-1 group-hover:text-primary-container transition-colors duration-200">
+                    {{ product.title }}
+                  </h3>
+                  <p class="font-headline text-[0.6rem] tracking-[0.2em] uppercase text-on-surface-variant mb-2">
+                    {{ getSubtitle(product) }}
+                  </p>
+                  <span
+                    class="font-headline font-bold text-sm"
+                    [class.text-primary-container]="!isSoldOut(product)"
+                    [class.text-on-surface-variant]="isSoldOut(product)">
+                    {{ isSoldOut(product) ? 'SOLD OUT' : getDisplayPrice(product) }}
+                  </span>
+                </a>
+              }
+            </div>
+          }
+
+          <!-- Load More -->
+          @if (!loading && hasMore) {
+            <div class="flex justify-center mt-20">
+              <button
+                (click)="loadMore()"
+                [disabled]="loadingMore"
+                class="bg-surface-container-high border border-outline-variant text-on-surface px-16 py-5 font-headline font-bold uppercase tracking-[0.25em] text-xs rounded-sm hover:bg-surface-bright hover:border-outline transition-all duration-200 active:scale-95 disabled:opacity-50 flex items-center gap-3">
+                @if (!loadingMore) {
+                  <span>LOAD MORE GEAR</span>
+                }
+                @if (loadingMore) {
+                  <span class="flex items-center gap-3">
+                    <svg class="animate-spin w-4 h-4 text-primary-container" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                    LOADING...
+                  </span>
+                }
+              </button>
+            </div>
+          }
+
+        </div>
+      </div>
+    </div>

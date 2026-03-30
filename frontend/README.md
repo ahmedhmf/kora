@@ -1,55 +1,27 @@
-# Ball Shop Frontend
+# Website
 
-A premium, modern, animation-rich brand website and e-commerce storefront for a sports ball brand. 
-Built with Angular and Tailwind CSS, ready for Medusa backend integration.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.7.
 
-## Features
+## Development server
 
-- **Premium UI/UX:** High-end design with smooth animations and responsive layout.
-- **Landing Page:** Story-driven content, product showcases, and trust signals.
-- **Shop:** 
-  - Product Listing with mock filtering and sorting.
-  - Product Detail with gallery, variants, and cart actions.
-  - Sidebar Cart drawer (mock).
-- **Checkout:** Visual multi-step checkout flow.
-- **Architecture:** 
-  - Standalone Components.
-  - Signal-based state management (Cart).
-  - Clean separation of concerns (Features vs Shared).
-- **Mock Mode:** Fully functional without a backend using `ProductService` and `CartService` mocks.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Getting Started
+## Code scaffolding
 
-1.  **Install Dependencies:**
-    ```bash
-    npm install
-    ```
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-2.  **Run the Application:**
-    ```bash
-    npm start
-    ```
-    Navigate to `http://localhost:4200/`.
+## Build
 
-3.  **Build for Production:**
-    ```bash
-    npm run build
-    ```
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Medusa Integration
+## Running unit tests
 
-The frontend is designed to be easily connected to a Medusa backend.
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
--   **Product Service:** `src/app/shared/services/product.service.ts`
-    -   Replace the mock data methods with HTTP calls to your Medusa Store API (e.g., `/store/products`).
--   **Cart Service:** `src/app/shared/services/cart.service.ts`
-    -   Replace the local signal state with Medusa Cart calls (`/store/carts`).
--   **Authentication:** `src/app/features/account`
-    -   Implement the login/register forms to hit Medusa Customer endpoints (`/store/auth`).
+## Running end-to-end tests
 
-## Tech Stack
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
--   **Framework:** Angular 19+ (Standalone)
--   **Styling:** Tailwind CSS v4
--   **Icons:** SVGs (Lucide style)
--   **Fonts:** Outfit (Google Fonts)
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
