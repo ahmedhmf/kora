@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../services/cart.service';
-import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,4 +13,5 @@ import { CommonModule } from '@angular/common';
 })
 export class NavbarComponent {
   public cartService = inject(CartService);
+  public authService = inject(AuthService);
 }

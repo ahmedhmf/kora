@@ -124,11 +124,12 @@ export class ShopComponent implements OnInit {
       });
     }
  
-    // 2. Size filter — product must have at least one variant matching ALL selected sizes
+    // 2. Size filter — product must have at least one variant matching ALL selected sizes THAT IS IN STOCK
     if (this.selectedSizes.size > 0) {
       filtered = filtered.filter((p) =>
         [...this.selectedSizes].every((size) =>
           (p.variants ?? []).some((v) =>
+            !this.isVariantOutOfStock(v) &&
             (v.options ?? []).some(
               (opt) =>
                 (opt.option?.title?.toLowerCase() === 'size' ||
@@ -247,16 +248,19 @@ export class ShopComponent implements OnInit {
     return null;
   }
  
+  isVariantOutOfStock(v: any): boolean {
+    if (!v) return true;
+    // If inventory isn't managed, it's always in stock
+    if (v.manage_inventory === false) return false;
+    // If backorder is allowed, it's considered in stock
+    if (v.allow_backorder === true) return false;
+    // Normal check: if quantity is missing (null/undefined) or 0, it's sold out
+    return (v.inventory_quantity ?? 0) <= 0;
+  }
+
   isSoldOut(p: MedusaProduct): boolean {
     if (!p.variants || p.variants.length === 0) return true;
-    return p.variants.every(v => {
-      // If inventory isn't managed, it's always in stock
-      if (v.manage_inventory === false) return false;
-      // If backorder is allowed, it's considered in stock
-      if (v.allow_backorder === true) return false;
-      // Normal check: if quantity is missing (null/undefined) or 0, it's sold out
-      return (v.inventory_quantity ?? 0) <= 0;
-    });
+    return p.variants.every(v => this.isVariantOutOfStock(v));
   }
  
   isCategorySelected(cat: string): boolean {

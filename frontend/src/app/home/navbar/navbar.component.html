@@ -37,7 +37,13 @@
             </span>
           }
         </button>
-        <button class="hover:opacity-80 transition-opacity duration-200 active:scale-95">
+        <button [routerLink]="authService.currentUser() ? '/profile' : '/auth'" 
+                class="hover:opacity-80 transition-opacity duration-200 active:scale-95 group relative flex items-center gap-2">
+          @if (authService.currentUser(); as user) {
+            <span class="hidden md:block text-[10px] font-black font-headline uppercase tracking-widest text-on-surface opacity-60 group-hover:opacity-100 transition-opacity">
+              {{ user.first_name }}
+            </span>
+          }
           <span class="material-symbols-outlined text-on-surface">person</span>
         </button>
       </div>

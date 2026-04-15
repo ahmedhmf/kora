@@ -61,7 +61,7 @@ export class ProductComponent {
           this.error = 'Product not found.';
         } else {
           this.product = product;
-          this.selectedVariant = product.variants?.[0] ?? null;
+          this.selectedVariant = product.variants?.find(v => !this.isVariantOutOfStock(v)) || (product.variants?.[0] ?? null);
         }
         this.loading = false;
       },
